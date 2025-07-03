@@ -5,36 +5,36 @@
 #
 
 # Name of this project
-name : Terraform Azure Module Template
+name: Terraform Azure Redis Cache
 
 # License of this project
 license: "APACHE"
 
 # Canonical GitHub repo
-github_repo: terraform-az-modules/terraform-module-template
+github_repo: terraform-az-modules/terraform-redis-cache
 
 # Badges to display
 badges:
-  - name: "Terraform"
-    image: "https://img.shields.io/badge/Terraform-v0.13-green"
-    url: "https://www.terraform.io"
-  - name: "Licence"
-    image: "https://img.shields.io/badge/License-APACHE-blue.svg"
-    url: "LICENSE.md"
-  - name: "Changelog"
-    image: "https://img.shields.io/badge/Changelog-blue"
-    url: "CHANGELOG.md"
+- name: "Terraform"
+  image: "https://img.shields.io/badge/Terraform-v0.13-green"
+  url: "https://www.terraform.io"
+- name: "Licence"
+  image: "https://img.shields.io/badge/License-APACHE-blue.svg"
+  url: "LICENSE.md"
+- name: "Changelog"
+  image: "https://img.shields.io/badge/Changelog-blue"
+  url: "CHANGELOG.md"
 
 # Prerequesties to display
 prerequesties:
-  - name: Terraform
-    url: https://learn.hashicorp.com/terraform/getting-started/install.html
-    version: ">= 1.6.6"
+- name: Terraform
+  url: https://learn.hashicorp.com/terraform/getting-started/install.html
+  version: ">= 1.6.6"
 
 providers:
-  - name: azure
-    url: https://azure.microsoft.com/
-    version: ">= 3.116.0"
+- name: azure
+  url: https://azure.microsoft.com/
+  version: ">= 3.116.0"
 
 #  description of this project
 description: |-

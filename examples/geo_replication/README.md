@@ -26,6 +26,7 @@ None specified in this example.
 | Name            | Source                              | Version |
 |-----------------|-------------------------------------|---------|
 | resource_group  | terraform-az-modules/resource-group/azure    | 1.0.0   |
+| secondary_resource_group  | terraform-az-modules/resource-group/azure    | 1.0.0   |
 | redis            | ../../                              | n/a     |
 
 
