@@ -60,7 +60,7 @@ resource "azurerm_redis_cache" "main" {
 ##-----------------------------------------------------------------------------
 resource "azurerm_redis_firewall_rule" "main" {
   for_each            = var.enabled && length(var.firewall_rules) > 0 ? { for idx, rule in var.firewall_rules : idx => rule } : {}
-  name                = var.resource_position_prefix ? format("redis-firewall-%s", replace(local.name, "-", "_")) : format("%s_redis_firewall", replace(local.name, "-", "_"))
+  name = var.resource_position_prefix ? format("redis_fw_%s", replace(local.name, "-", "_")) : format("%s_redis_fw", replace(local.name, "-", "_"))
   redis_cache_name    = azurerm_redis_cache.main[0].name
   resource_group_name = var.resource_group_name
   start_ip            = each.value.start_ip

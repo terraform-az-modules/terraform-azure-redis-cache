@@ -25,13 +25,13 @@ EOT
 ##-----------------------------------------------------------------------------
 variable "name" {
   type        = string
-  default     = ""
+  default     = "core"
   description = "Name  (e.g. `app` or `cluster`)."
 }
 
 variable "environment" {
   type        = string
-  default     = ""
+  default     = "dev"
   description = "Environment (e.g. `prod`, `dev`, `staging`)."
 }
 

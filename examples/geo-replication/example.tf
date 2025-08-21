@@ -16,6 +16,7 @@ module "resource_group" {
   location    = "centralus"
   label_order = ["name", "environment", "location"]
 }
+
 ##-----------------------------------------------------------------------------
 ## Secondary Resource Group module call
 ## Resource group in Geo Redis will be Deployed
@@ -30,7 +31,7 @@ module "secondary_resource_group" {
 }
 
 ##----------------------------------------------------------------------------- 
-## ACR module call.
+## Redis module call.
 ##-----------------------------------------------------------------------------
 module "redis" {
   source                        = "../../"
