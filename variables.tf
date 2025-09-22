@@ -61,7 +61,7 @@ variable "repository" {
 
 variable "location" {
   type        = string
-  default     = ""
+  default     = "centralus"
   description = "The location/region where the virtual network is created. Changing this forces a new resource to be created."
 }
 
@@ -82,10 +82,10 @@ variable "label_order" {
 ##-----------------------------------------------------------------------------
 variable "resource_group_name" {
   type        = string
-  description = "The name of the resource group in which to create the Log Analytics."
+  description = "The name of the resource group in which to create the Redis Cache."
 }
 
-variable "enabled" {
+variable "enable" {
   type        = bool
   default     = true
   description = "Set to false to prevent the module from creating any resources."
@@ -205,13 +205,6 @@ variable "firewall_rules" {
   description = "Firewall IP address ranges"
 }
 
-
-variable "enable_linked_server" {
-  type        = bool
-  default     = false
-  description = "Enable Redis linked server configuration"
-}
-
 variable "server_role" {
   type        = string
   default     = "Secondary"
@@ -256,7 +249,7 @@ variable "secondary_resource_position_prefix" {
 
 variable "secondary_location" {
   type        = string
-  default     = null
+  default     = "eastus"
   description = "Location for secondary Redis cache"
 }
 

@@ -18,7 +18,7 @@ module "labels" {
 ## Azure Redis Cache - Main Redis instance configuration
 ##-----------------------------------------------------------------------------
 resource "azurerm_redis_cache" "main" {
-  count                              = var.enabled ? 1 : 0
+  count                              = var.enable ? 1 : 0
   name                               = var.resource_position_prefix ? format("redis-%s", local.name) : format("%s-redis", local.name)
   location                           = var.location
   resource_group_name                = var.resource_group_name
@@ -59,7 +59,7 @@ resource "azurerm_redis_cache" "main" {
 ## Redis Firewall Rule - Define IP rules to restrict inbound access
 ##-----------------------------------------------------------------------------
 resource "azurerm_redis_firewall_rule" "main" {
-  for_each            = var.enabled && length(var.firewall_rules) > 0 ? { for idx, rule in var.firewall_rules : idx => rule } : {}
+  for_each            = var.enable && length(var.firewall_rules) > 0 ? { for idx, rule in var.firewall_rules : idx => rule } : {}
   name                = var.resource_position_prefix ? format("redis_fw_%s", replace(local.name, "-", "_")) : format("%s_redis_fw", replace(local.name, "-", "_"))
   redis_cache_name    = azurerm_redis_cache.main[0].name
   resource_group_name = var.resource_group_name
@@ -71,7 +71,7 @@ resource "azurerm_redis_firewall_rule" "main" {
 ## Redis Linked Server - Setup active geo-replication across Redis instances
 ##-----------------------------------------------------------------------------
 resource "azurerm_redis_linked_server" "main" {
-  count                       = var.enabled && var.enable_linked_server ? 1 : 0
+  count                       = var.enable && var.secondary_enabled ? 1 : 0
   target_redis_cache_name     = azurerm_redis_cache.main[0].name
   resource_group_name         = var.resource_group_name
   linked_redis_cache_id       = azurerm_redis_cache.secondary[0].id
@@ -83,7 +83,7 @@ resource "azurerm_redis_linked_server" "main" {
 ## Redis Cache resource that manages the Azure Redis Cache Policy
 ##----------------------------------------------------------------------------- 
 resource "azurerm_redis_cache_access_policy" "main" {
-  count          = var.enabled ? 1 : 0
+  count          = var.enable ? 1 : 0
   name           = var.resource_position_prefix ? format("arc-policy-%s", local.name) : format("%s-arc-policy", local.name)
   redis_cache_id = azurerm_redis_cache.main[count.index].id
   permissions    = var.permissions
@@ -93,7 +93,7 @@ resource "azurerm_redis_cache_access_policy" "main" {
 ## Azure Redis Cache - Secondary
 ##-----------------------------------------------------------------------------
 resource "azurerm_redis_cache" "secondary" {
-  count                              = var.enabled && var.secondary_enabled ? 1 : 0
+  count                              = var.enable && var.secondary_enabled ? 1 : 0
   name                               = var.secondary_resource_position_prefix ? format("geo-redis-%s", local.name) : format("%s-geo-redis", local.name)
   location                           = var.secondary_location
   resource_group_name                = var.secondary_resource_group_name
