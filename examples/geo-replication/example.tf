@@ -39,7 +39,6 @@ module "redis" {
   environment                   = "dev"
   location                      = module.resource_group.resource_group_location
   resource_group_name           = module.resource_group.resource_group_name
-  enable_linked_server          = true
   user_object_id                = data.azurerm_client_config.current_client_config.object_id
   secondary_enabled             = true
   secondary_location            = module.secondary_resource_group.resource_group_location
