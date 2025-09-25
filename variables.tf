@@ -80,16 +80,85 @@ variable "label_order" {
 ##-----------------------------------------------------------------------------
 ## Global Variables
 ##-----------------------------------------------------------------------------
-variable "resource_group_name" {
-  type        = string
-  description = "The name of the resource group in which to create the Redis Cache."
-}
 
 variable "enable" {
   type        = bool
   default     = true
   description = "Set to false to prevent the module from creating any resources."
 }
+
+variable "resource_group_name" {
+  type        = string
+  description = "The name of the resource group in which to create the Redis Cache."
+}
+
+##-----------------------------------------------------------------------------
+## Primary Redis Cache Configuration
+##-----------------------------------------------------------------------------
+
+variable "access_keys_authentication_enabled" {
+  type        = bool
+  default     = true
+  description = "Enable access key authentication"
+}
+
+variable "capacity" {
+  type        = number
+  default     = 1
+  description = "Redis cache size"
+}
+
+variable "family" {
+  type        = string
+  default     = "C"
+  description = "SKU family - C for Basic/Standard, P for Premium"
+}
+
+variable "minimum_tls_version" {
+  type        = string
+  default     = "1.2"
+  description = "Minimum TLS version"
+}
+
+variable "non_ssl_port_enabled" {
+  type        = bool
+  default     = false
+  description = "Enable non-SSL port 6379"
+}
+
+variable "public_network_access_enabled" {
+  type        = bool
+  default     = false
+  description = "Allow public network access"
+}
+
+variable "redis_version" {
+  type        = string
+  default     = "6"
+  description = "Redis version"
+}
+
+variable "replicas_per_master" {
+  type        = number
+  default     = null
+  description = "Number of replicas per master"
+}
+
+variable "replicas_per_primary" {
+  type        = number
+  default     = null
+  description = "Number of replicas per primary"
+}
+
+variable "sku_name" {
+  type        = string
+  default     = "Standard"
+  description = "Redis SKU - Basic, Standard, or Premium"
+}
+
+##-----------------------------------------------------------------------------
+## Redis Configuration Settings
+##-----------------------------------------------------------------------------
 
 variable "redis_config" {
   type = object({
@@ -121,66 +190,9 @@ variable "redis_config" {
   description = "Redis configuration settings"
 }
 
-variable "capacity" {
-  type        = number
-  default     = 1
-  description = "Redis cache size"
-}
-
-variable "family" {
-  type        = string
-  default     = "C"
-  description = "SKU family - C for Basic/Standard, P for Premium"
-}
-
-variable "sku_name" {
-  type        = string
-  default     = "Standard"
-  description = "Redis SKU - Basic, Standard, or Premium"
-}
-
-variable "non_ssl_port_enabled" {
-  type        = bool
-  default     = false
-  description = "Enable non-SSL port 6379"
-}
-
-variable "minimum_tls_version" {
-  type        = string
-  default     = "1.2"
-  description = "Minimum TLS version"
-}
-
-variable "access_keys_authentication_enabled" {
-  type        = bool
-  default     = true
-  description = "Enable access key authentication"
-}
-
-variable "public_network_access_enabled" {
-  type        = bool
-  default     = false
-  description = "Allow public network access"
-}
-
-variable "redis_version" {
-  type        = string
-  default     = "6"
-  description = "Redis version"
-}
-
-variable "replicas_per_master" {
-  type        = number
-  default     = 1
-  description = "Number of replicas per master"
-}
-
-variable "replicas_per_primary" {
-  type        = number
-  default     = 1
-  description = "Number of replicas per primary"
-}
-
+##-----------------------------------------------------------------------------
+## Maintenance & Scheduling
+##-----------------------------------------------------------------------------
 
 variable "patch_schedule" {
   type = object({
@@ -190,6 +202,10 @@ variable "patch_schedule" {
   default     = null
   description = "Redis maintenance schedule"
 }
+
+##-----------------------------------------------------------------------------
+## Network Security & Access
+##-----------------------------------------------------------------------------
 
 variable "firewall_rules" {
   type = map(object({
@@ -205,22 +221,14 @@ variable "firewall_rules" {
   description = "Firewall IP address ranges"
 }
 
-variable "server_role" {
-  type        = string
-  default     = "Secondary"
-  description = "Role of the linked server - Primary or Secondary"
-}
+##-----------------------------------------------------------------------------
+## Access Policy Configuration
+##-----------------------------------------------------------------------------
 
 variable "access_policy_name" {
   type        = string
   default     = "Data Contributor"
   description = "Name of the access policy to assign"
-}
-
-variable "user_object_id" {
-  type        = string
-  default     = null
-  description = "Object ID of the user or service principal"
 }
 
 variable "object_id_alias" {
@@ -235,28 +243,32 @@ variable "permissions" {
   description = "Permissions for the Redis cache access policy"
 }
 
+variable "server_role" {
+  type        = string
+  default     = "Secondary"
+  description = "Role of the linked server - Primary or Secondary"
+}
+
+variable "user_object_id" {
+  type        = string
+  default     = null
+  description = "Object ID of the user or service principal"
+}
+
+##-----------------------------------------------------------------------------
+## Secondary Redis Cache Configuration
+##-----------------------------------------------------------------------------
+
 variable "secondary_enabled" {
   type        = bool
   default     = false
   description = "Enable secondary Redis cache"
 }
 
-variable "secondary_resource_position_prefix" {
+variable "secondary_access_keys_authentication_enabled" {
   type        = bool
   default     = true
-  description = "Position prefix for secondary Redis cache name"
-}
-
-variable "secondary_location" {
-  type        = string
-  default     = "eastus"
-  description = "Location for secondary Redis cache"
-}
-
-variable "secondary_resource_group_name" {
-  type        = string
-  default     = null
-  description = "Resource group name for secondary Redis cache"
+  description = "Enable access key authentication for secondary Redis cache"
 }
 
 variable "secondary_capacity" {
@@ -271,16 +283,10 @@ variable "secondary_family" {
   description = "SKU family for secondary Redis cache"
 }
 
-variable "secondary_sku_name" {
+variable "secondary_location" {
   type        = string
-  default     = "Premium"
-  description = "SKU name for secondary Redis cache"
-}
-
-variable "secondary_non_ssl_port_enabled" {
-  type        = bool
-  default     = false
-  description = "Enable non-SSL port for secondary Redis cache"
+  default     = "eastus"
+  description = "Location for secondary Redis cache"
 }
 
 variable "secondary_minimum_tls_version" {
@@ -289,10 +295,10 @@ variable "secondary_minimum_tls_version" {
   description = "Minimum TLS version for secondary Redis cache"
 }
 
-variable "secondary_access_keys_authentication_enabled" {
+variable "secondary_non_ssl_port_enabled" {
   type        = bool
-  default     = true
-  description = "Enable access key authentication for secondary Redis cache"
+  default     = false
+  description = "Enable non-SSL port for secondary Redis cache"
 }
 
 variable "secondary_public_network_access_enabled" {
@@ -318,6 +324,28 @@ variable "secondary_replicas_per_primary" {
   default     = 1
   description = "Number of replicas per primary for secondary Redis cache"
 }
+
+variable "secondary_resource_group_name" {
+  type        = string
+  default     = null
+  description = "Resource group name for secondary Redis cache"
+}
+
+variable "secondary_resource_position_prefix" {
+  type        = bool
+  default     = true
+  description = "Position prefix for secondary Redis cache name"
+}
+
+variable "secondary_sku_name" {
+  type        = string
+  default     = "Premium"
+  description = "SKU name for secondary Redis cache"
+}
+
+##-----------------------------------------------------------------------------
+## Secondary Redis Configuration Settings
+##-----------------------------------------------------------------------------
 
 variable "secondary_patch_schedule" {
   type = object({
@@ -358,8 +386,71 @@ variable "secondary_redis_config" {
   description = "Redis configuration settings for secondary cache"
 }
 
+##-----------------------------------------------------------------------------
+## Geo-Replication Configuration
+##-----------------------------------------------------------------------------
+
 variable "enable_geo_replication" {
   type        = bool
   default     = false
   description = "Enable geo-replication between primary and secondary Redis caches"
+}
+
+##-----------------------------------------------------------------------------
+## Private Endpoint & DNS Configuration
+##-----------------------------------------------------------------------------
+
+variable "enable_private_endpoint" {
+  type        = bool
+  default     = true
+  description = "Enable private endpoint for Redis Cache."
+}
+
+variable "private_dns_zone_ids" {
+  type        = string
+  default     = null
+  description = "The ID of the private DNS zone."
+}
+
+variable "subnet_id" {
+  type        = string
+  default     = null
+  description = "Subnet ID for the private endpoint."
+}
+
+##-----------------------------------------------------------------------------
+## Diagnostic Settings & Monitoring
+##-----------------------------------------------------------------------------
+
+variable "enable_diagnostic" {
+  type        = bool
+  default     = true
+  description = "Enable diagnostic settings for Redis Cache"
+}
+
+variable "log_analytics_workspace_id" {
+  type        = string
+  default     = null
+  description = "Log Analytics Workspace ID for diagnostics."
+}
+
+variable "storage_account_id" {
+  type        = string
+  default     = null
+  description = "Storage account ID for diagnostic settings destination."
+}
+
+variable "metric_enabled" {
+  type        = bool
+  default     = true
+  description = "Boolean flag to specify whether Metrics should be enabled for the Container Registry. Defaults to true."
+}
+
+variable "logs" {
+  type = list(object({
+    category_group = optional(string)
+    category       = optional(string)
+  }))
+  default     = []
+  description = "List of log configurations for diagnostic settings. Each object can specify either category_group or category."
 }

@@ -54,6 +54,7 @@ output "secondary_connection_string" {
 output "redis_configuration" {
   value       = try(azurerm_redis_cache.main[0].redis_configuration, null)
   description = "Redis configuration block applied to the cache instance"
+  sensitive = true
 }
 
 output "maxclients" {

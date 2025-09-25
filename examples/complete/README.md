@@ -26,7 +26,11 @@ None specified in this example.
 | Name            | Source                              | Version |
 |-----------------|-------------------------------------|---------|
 | resource_group  | terraform-az-modules/resource-group/azure    | 1.0.0   |
-| redis            | ../../                              | n/a     |
+| vnet            | terraform-az-modules/vnet/azure     | 1.0.0   |
+| subnet          | terraform-az-modules/subnet/azure   | 1.0.0   |
+| log-analytics   | terraform-az-modules/log-analytics/azure | 1.0.0   |
+| private_dns_zone| terraform-az-modules/private-dns/azure | 1.0.0   |
+| redis           | ../../                              | n/a     |
 
 
 ---

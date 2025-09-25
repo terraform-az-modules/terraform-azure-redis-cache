@@ -68,7 +68,7 @@ resource "azurerm_redis_firewall_rule" "main" {
 }
 
 ##-----------------------------------------------------------------------------
-## Redis Linked Server - Setup active geo-replication across Redis instances
+## Redis Linked Server - Setup active geo-replication arcoss Redis instances
 ##-----------------------------------------------------------------------------
 resource "azurerm_redis_linked_server" "main" {
   count                       = var.enable && var.secondary_enabled ? 1 : 0
@@ -87,6 +87,28 @@ resource "azurerm_redis_cache_access_policy" "main" {
   name           = var.resource_position_prefix ? format("arc-policy-%s", local.name) : format("%s-arc-policy", local.name)
   redis_cache_id = azurerm_redis_cache.main[count.index].id
   permissions    = var.permissions
+}
+
+#-----------------------------------------------------------------------------
+## Private Endpoint - Deploy private network access to Redis Cache
+##---------------------------------------------------------------------------
+resource "azurerm_private_endpoint" "pep" {
+  count               = var.enable && var.enable_private_endpoint ? 1 : 0
+  name                = var.resource_position_prefix ? format("pe-arc-%s", local.name) : format("%s-pe-arc", local.name)
+  location            = var.location
+  resource_group_name = var.resource_group_name
+  subnet_id           = var.subnet_id
+  tags                = module.labels.tags
+  private_dns_zone_group {
+    name                 = var.resource_position_prefix ? format("dns-zone-group-arc-%s", local.name) : format("%s-dns-zone-group-arc", local.name)
+    private_dns_zone_ids = [var.private_dns_zone_ids]
+  }
+  private_service_connection {
+    name                           = var.resource_position_prefix ? format("psc-arc-%s", local.name) : format("%s-psc-arc", local.name)
+    is_manual_connection           = false
+    private_connection_resource_id = azurerm_redis_cache.main[0].id
+    subresource_names              = ["rediscache"]
+  }
 }
 
 ##-----------------------------------------------------------------------------
@@ -127,5 +149,29 @@ resource "azurerm_redis_cache" "secondary" {
     rdb_backup_frequency                    = var.secondary_redis_config.backup_enabled && var.secondary_sku_name == "Premium" && !var.enable_geo_replication ? var.secondary_redis_config.rdb_backup_frequency : null
     aof_storage_connection_string_0         = var.secondary_redis_config.aof_backup_enabled && !var.enable_geo_replication ? var.secondary_redis_config.aof_storage_connection_string_0 : null
     aof_backup_enabled                      = var.secondary_redis_config.aof_backup_enabled && !var.enable_geo_replication
+  }
+}
+
+##-----------------------------------------------------------------------------
+## Diagnostic Setting - Deploy monitoring and logging for Redis Cache
+##-----------------------------------------------------------------------------
+resource "azurerm_monitor_diagnostic_setting" "arc-diag" {
+  count                      = var.enable && var.enable_diagnostic ? 1 : 0
+  name                       = var.resource_position_prefix ? format("diag-log-arc-%s", local.name) : format("%s-diag-log-arc", local.name)
+  target_resource_id         = azurerm_redis_cache.main[0].id
+  storage_account_id         = var.storage_account_id
+  log_analytics_workspace_id = var.log_analytics_workspace_id
+  dynamic "enabled_log" {
+    for_each = var.logs
+    content {
+      category_group = lookup(enabled_log.value, "category_group", null)
+      category       = lookup(enabled_log.value, "category", null)
+    }
+  }
+  dynamic "enabled_metric" {
+    for_each = var.metric_enabled ? ["AllMetrics"] : []
+    content {
+      category = enabled_metric.value
+    }
   }
 }

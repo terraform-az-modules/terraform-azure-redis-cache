@@ -2,7 +2,7 @@
 
 # Terraform Azure Redis Cache
 
-This directory contains an example usage of the **terraform-azure-redis-cache**. It demonstrates how to use the module with default settings or with custom configurations.
+This directory contains an example usage of the **terraform-azure-redis-cache**. It demonstrates how to use the module with geo-replication.
 
 ---
 
