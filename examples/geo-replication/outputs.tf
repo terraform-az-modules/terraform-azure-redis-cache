@@ -45,7 +45,6 @@ output "secondary_connection_string" {
 output "redis_configuration" {
   value       = module.redis.redis_configuration
   description = "Redis configuration block applied to the cache instance"
-  sensitive   = true
 }
 
 output "maxclients" {
